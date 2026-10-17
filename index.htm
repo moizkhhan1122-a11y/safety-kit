@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>سیفٹی کٹ – Safety Kit</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#050505">
+<link rel="icon" href="icon-192.png">
+<style>
+:root{--bg:#050505;--panel:#0f0d09;--line:#2b2312;--ink:#f5efe0;--mute:#a8997a;--gold:#d4af37;--gold2:#f3d779;--red:#e5383b;--red2:#8d0a10;--ok:#6ee7a8}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{
+  background:radial-gradient(70% 34% at 50% 30%,rgba(229,56,59,.14) 0%,transparent 70%),radial-gradient(130% 50% at 50% -5%,#2a2008 0%,transparent 62%),radial-gradient(rgba(255,255,255,.04) 1px,transparent 1.5px) 0 0/22px 22px,var(--bg);
+  color:var(--ink);font-family:"Noto Nastaliq Urdu","Jameel Noori Nastaleeq","Segoe UI",system-ui,sans-serif;
+  display:flex;flex-direction:column;gap:16px;padding:16px;min-height:100vh;
+}
+.top{display:flex;align-items:center;gap:12px}
+.logo{width:48px;height:48px;border-radius:15px;background:linear-gradient(135deg,var(--gold2),var(--gold));display:grid;place-items:center;box-shadow:0 6px 20px -6px rgba(212,175,55,.6)}
+.top h1{margin:0;font-size:1.5rem;line-height:1.5;background:linear-gradient(90deg,var(--gold),var(--gold2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.top p{margin:0;font:500 .85rem system-ui,sans-serif;color:var(--mute)}
+
+.hero{display:flex;flex-direction:column;align-items:center;gap:10px;padding:6px 0}
+.rings{position:relative;display:grid;place-items:center;width:min(74vw,310px);aspect-ratio:1}
+.rings::before,.rings::after{content:"";position:absolute;border-radius:50%;border:1.5px solid rgba(229,56,59,.3)}
+.rings::before{inset:0}.rings::after{inset:11%;border-color:rgba(212,175,55,.35)}
+#sos{position:relative;width:64%;aspect-ratio:1;border:0;border-radius:50%;background:radial-gradient(circle at 32% 26%,#ff7b7e 0%,var(--red) 42%,var(--red2) 100%);color:#fff;font:700 2rem/1.4 inherit;font-family:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 14px 40px -10px rgba(229,56,59,.7),inset 0 2px 0 rgba(255,255,255,.3);transition:transform .12s}
+#sos:active{transform:scale(.95)}
+#sos small{font:600 .8rem system-ui,sans-serif;opacity:.9}
+#sos.busy{animation:ping 1.2s ease-out infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(229,56,59,.6),0 14px 40px -10px rgba(229,56,59,.7)}100%{box-shadow:0 0 0 32px rgba(229,56,59,0),0 14px 40px -10px rgba(229,56,59,.7)}}
+@media (prefers-reduced-motion:reduce){#sos.busy{animation:none}}
+#status{text-align:center;font-size:1.05rem;min-height:1.5em;color:var(--mute)}
+#status.done{color:var(--ok)}#status.warn{color:var(--gold2)}
+
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px}
+.card h2{margin:0 0 10px;font-size:1.1rem;color:var(--gold)}
+.card h2 span{font:500 .8rem system-ui,sans-serif;color:var(--mute);margin-inline-start:6px}
+#alert{display:none;border-color:rgba(229,56,59,.6)}
+#msg{font-size:1rem;line-height:1.8;color:var(--ink);margin:0 0 12px;word-break:break-word}
+.person{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 0;border-top:1px solid var(--line)}
+.person b{font-size:1.05rem}
+.acts{display:flex;gap:8px}
+.btn{display:inline-block;padding:10px 14px;border-radius:12px;font:600 .95rem system-ui,sans-serif;text-decoration:none;text-align:center;color:#1a1405;background:linear-gradient(135deg,var(--gold2),var(--gold));border:0}
+.btn.wa{background:#25d366;color:#04210f}
+.calls{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.call{display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px 6px;border-radius:14px;text-decoration:none;color:var(--ink);background:#14100a;border:1px solid var(--gold)}
+.call b{font:700 1.3rem system-ui,sans-serif;color:var(--gold2)}
+.call span{font-size:.9rem}
+.row{display:grid;grid-template-columns:1fr 1.2fr;gap:8px;margin-bottom:8px}
+input{width:100%;padding:12px;border-radius:12px;border:1px solid var(--line);background:#0a0805;color:var(--ink);font-size:1rem;font-family:inherit}
+input:focus{outline:2px solid var(--gold);border-color:var(--gold)}
+#save{width:100%;padding:14px;font:700 1rem inherit;font-family:inherit;border:0;border-radius:14px;color:#1a1405;background:linear-gradient(135deg,var(--gold2),var(--gold))}
+.note{font:400 .8rem/1.6 system-ui,sans-serif;color:var(--mute);text-align:center;margin:0 6px 6px}
+.types{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.chip{padding:9px 14px;border-radius:999px;background:var(--panel);border:1px solid var(--line);color:var(--ink);font:600 .95rem inherit;font-family:inherit}
+.chip.on{background:rgba(212,175,55,.16);border-color:var(--gold);color:var(--gold2)}
+.ghost{padding:12px 14px;border-radius:14px;border:1px solid var(--gold);background:transparent;color:var(--gold2);font:600 .95rem inherit;font-family:inherit}
+.ghost.on{background:var(--red);border-color:var(--red);color:#fff}
+.acts2{display:flex;gap:10px;margin-top:12px}.acts2 .ghost{flex:1}
+.day{display:grid;grid-template-columns:auto 1fr auto;gap:4px 10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.day b{font-size:1.05rem}.day small{font:500 .85rem system-ui,sans-serif;color:var(--mute)}
+.pill{padding:5px 10px;border-radius:999px;font:700 .8rem system-ui,sans-serif;white-space:nowrap}
+.p0{background:rgba(110,231,168,.15);color:var(--ok)}.p2{background:rgba(212,175,55,.18);color:var(--gold2)}.p3{background:rgba(229,56,59,.2);color:#ff8a8d}
+.kitem{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line);font-size:1rem}
+.kitem input{width:22px;height:22px;padding:0;accent-color:var(--gold);flex:none}
+#kitcount{color:var(--gold2);font:700 .85rem system-ui,sans-serif}
+
+/* Visual upgrade */
+.top{padding-bottom:14px;border-bottom:1px solid transparent;border-image:linear-gradient(90deg,transparent,rgba(212,175,55,.5),transparent) 1}
+.logo{width:54px;height:54px;border-radius:17px;box-shadow:0 8px 24px -6px rgba(212,175,55,.65),inset 0 1px 0 rgba(255,255,255,.5)}
+.top h1{font-size:1.75rem}
+.rings::before{border:0;background:repeating-conic-gradient(rgba(212,175,55,.5) 0 1.2deg,transparent 1.2deg 7.5deg);-webkit-mask:radial-gradient(circle,transparent 66%,#000 67%,#000 74%,transparent 75%);mask:radial-gradient(circle,transparent 66%,#000 67%,#000 74%,transparent 75%)}
+.rings::after{inset:13%;border:1.5px solid rgba(229,56,59,.45);box-shadow:0 0 40px rgba(229,56,59,.25),inset 0 0 30px rgba(229,56,59,.18)}
+#sos{width:66%;font-size:2.3rem;text-shadow:0 2px 8px rgba(0,0,0,.35);box-shadow:0 18px 50px -10px rgba(229,56,59,.8),0 0 0 6px rgba(229,56,59,.12),inset 0 3px 0 rgba(255,255,255,.35),inset 0 -10px 20px rgba(0,0,0,.25)}
+.card{background:linear-gradient(#100d08,#0b0906) padding-box,linear-gradient(135deg,rgba(243,215,121,.6),rgba(212,175,55,.08) 38%,rgba(212,175,55,.4)) border-box;border:1px solid transparent;border-radius:20px;padding:16px;box-shadow:0 14px 30px -18px #000}
+#alert{background:linear-gradient(#150b0b,#0b0606) padding-box,linear-gradient(135deg,rgba(255,138,141,.8),rgba(229,56,59,.1) 40%,rgba(229,56,59,.5)) border-box}
+.card h2{font-size:1.2rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.chip{padding:10px 15px;font-size:1rem;box-shadow:0 4px 12px -6px #000}
+.chip.on{box-shadow:0 0 0 3px rgba(212,175,55,.15)}
+.call{padding:14px 6px;background:linear-gradient(#17120a,#0e0b07);border:1px solid var(--line);border-top:3px solid var(--c,#d4af37);box-shadow:0 8px 18px -12px #000}
+.call:nth-child(1){--c:#4fd18b}.call:nth-child(2){--c:#e5383b}.call:nth-child(3){--c:#5b8def}.call:nth-child(4){--c:#ff8a3d}
+.call b{color:var(--c)}
+.btn{box-shadow:0 6px 14px -8px rgba(0,0,0,.8)}
+.btn.wa{background:linear-gradient(135deg,#3be07c,#1faa56);color:#04210f}
+.ghost{background:rgba(212,175,55,.06)}
+.day{padding:12px 0 10px}
+.bar{grid-column:1/-1;height:7px;border-radius:4px;background:#1a150b;overflow:hidden;margin-top:2px}
+.bar i{display:block;height:100%;border-radius:4px;background:var(--ok);min-width:3%}
+.bar i.f1{background:linear-gradient(90deg,var(--gold),var(--gold2))}.bar i.f2{background:linear-gradient(90deg,#b8902a,var(--gold2))}.bar i.f3{background:linear-gradient(90deg,#8d0a10,var(--red))}
+#kitbar{margin:0 0 6px}#kitbar i{width:0;transition:width .3s}
+.kitem{padding:11px 0}
+.kitem input{appearance:none;-webkit-appearance:none;border:2px solid #5a4a1e;border-radius:7px;background:#0a0805;display:grid;place-items:center}
+.kitem input:checked{background:linear-gradient(135deg,var(--gold2),var(--gold));border-color:var(--gold)}
+.kitem input:checked::after{content:"✓";color:#1a1405;font:700 15px/1 system-ui}
+input{background:#0a0805;border-color:#3a2f14}
+#save{box-shadow:0 8px 18px -10px rgba(212,175,55,.7)}
+@media (prefers-reduced-motion:no-preference){.card{animation:up .45s ease both}.card:nth-of-type(2){animation-delay:.05s}@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}}
+button:focus-visible,a:focus-visible{outline:3px solid #fff;outline-offset:2px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="logo" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1a1405" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M12 8v6M9 11h6"/></svg></div>
+  <div><h1>سیفٹی کٹ</h1><p>Safety Kit · SOS, weather alerts, go-bag</p></div>
+</header>
+
+<section class="hero">
+  <div class="rings"><button id="sos" aria-label="Emergency. Tap for help. مدد">مدد<small>Tap for help</small></button></div>
+  <div id="status" role="status" aria-live="polite"></div>
+  <div class="types" id="types" aria-label="Type of emergency"></div>
+  <button id="siren" class="ghost">🔊 سائرن · Siren</button>
+</section>
+
+<section id="alert" class="card" aria-live="polite">
+  <h2>📨 پیغام بھیجیں<span>Send the alert</span></h2>
+  <p id="msg"></p>
+  <div id="people"></div>
+  <div class="acts2"><button id="safe" class="ghost">میں محفوظ ہوں · I’m safe</button><button id="share" class="ghost">شیئر · Share</button></div>
+</section>
+
+<section class="card">
+  <h2>📞 فوری کال<span>Call now</span></h2>
+  <div class="calls">
+    <a class="call" href="tel:115"><b>115</b><span>ایدھی</span></a>
+    <a class="call" href="tel:1122"><b>1122</b><span>ریسکیو</span></a>
+    <a class="call" href="tel:15"><b>15</b><span>پولیس</span></a>
+    <a class="call" href="tel:16"><b>16</b><span>فائر</span></a>
+  </div>
+</section>
+
+<section class="card">
+  <h2>🌦️ موسم کی وارننگ<span>Rain and heat alert</span></h2>
+  <button id="wx" class="ghost" style="width:100%">📍 اگلے 3 دن دیکھیں · Check next 3 days</button>
+  <div id="days"></div>
+  <button id="wxsend" class="ghost" style="display:none;width:100%;margin-top:10px">رابطوں کو خبردار کریں · Warn my contacts</button>
+  <p id="wxnote" class="note" style="display:none;margin-top:10px">یہ صرف اندازہ ہے۔ سرکاری وارننگ کے لیے NDMA اور PMD دیکھیں۔ Estimate only; check NDMA and PMD for official alerts.</p>
+</section>
+
+<section class="card">
+  <h2>🎒 ہنگامی کِٹ<span>Go-bag checklist</span> <span id="kitcount"></span></h2>
+  <div class="bar" id="kitbar"><i class="f1"></i></div>
+  <div id="kit"></div>
+  <input id="meet" placeholder="خاندان کی ملاقات کی جگہ · Family meeting point" aria-label="Family meeting point" style="margin-top:10px">
+</section>
+
+<section class="card">
+  <h2>👥 میرے رابطے<span>Contacts and medical info</span></h2>
+  <div id="slots"></div>
+  <div class="row"><input id="blood" placeholder="بلڈ گروپ · Blood group" aria-label="Blood group"><input id="meds" placeholder="الرجی / بیماری · Allergies, conditions" aria-label="Allergies and conditions"></div>
+  <button id="save">محفوظ کریں · Save</button>
+</section>
+
+<p class="note">This app opens WhatsApp or SMS with your message ready; you must tap send. In a life-threatening emergency, call 115 or 1122 first. Check that the numbers are right for your area.</p>
+
+<script>
+const KEY="eh_contacts_v1",MED="eh_med_v1";
+const $=id=>document.getElementById(id);
+const status=(t,c)=>{$("status").textContent=t;$("status").className=c||""};
+const load=()=>{try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return[]}};
+const loadMed=()=>{try{return JSON.parse(localStorage.getItem(MED))||{}}catch(e){return{}}};
+const put=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}};
+function norm(n){
+  let d=(n||"").replace(/\D/g,"");
+  if(d.startsWith("00"))d=d.slice(2);
+  else if(d.startsWith("0"))d="92"+d.slice(1);
+  return d;
+}
+function say(t){try{const u=new SpeechSynthesisUtterance(t);u.lang="ur-PK";u.rate=.9;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
+function mk(tag,cls,txt,href){const e=document.createElement(tag);if(cls)e.className=cls;if(txt)e.textContent=txt;if(href)e.href=href;return e}
+
+// Emergency type chips
+const TYPES=[["🩺","طبی","طبی ایمرجنسی"],["🚗","حادثہ","حادثہ پیش آیا ہے"],["🔥","آگ","آگ لگ گئی ہے"],["⚠️","خطرہ","جان کو خطرہ ہے"]];
+let type=-1,current="";
+TYPES.forEach((t,i)=>{
+  const b=mk("button","chip",t[0]+" "+t[1]);
+  b.onclick=()=>{type=type===i?-1:i;[...$("types").children].forEach((c,j)=>c.classList.toggle("on",j===type))};
+  $("types").append(b);
+});
+
+// Contacts and medical info
+const saved=load(),med0=loadMed();
+$("blood").value=med0.blood||"";$("meds").value=med0.notes||"";
+for(let i=0;i<3;i++){
+  const r=mk("div","row");
+  const n=mk("input");n.placeholder="نام · Name";n.setAttribute("aria-label","Contact "+(i+1)+" name");n.value=(saved[i]&&saved[i].name)||"";
+  const p=mk("input");p.placeholder="03XX XXXXXXX";p.type="tel";p.inputMode="tel";p.setAttribute("aria-label","Contact "+(i+1)+" phone");p.value=(saved[i]&&saved[i].phone)||"";
+  r.append(n,p);$("slots").append(r);
+}
+$("save").onclick=()=>{
+  const rows=[...$("slots").children].map(r=>({name:r.children[0].value.trim(),phone:r.children[1].value.trim()}));
+  const good=rows.filter(c=>norm(c.phone).length>=11);
+  const med={blood:$("blood").value.trim(),notes:$("meds").value.trim()};
+  if(!good.length&&!med.blood&&!med.notes){status("کم از کم ایک درست نمبر لکھیں · Enter at least one valid number","warn");return}
+  const ok=put(KEY,good)&put(MED,med);
+  status(ok?"محفوظ ہو گیا · Saved":"محفوظ نہیں ہو سکا · Could not save",ok?"done":"warn");
+};
+
+// Message and send buttons
+function build(pos){
+  let m="🚨 ہنگامی صورتحال! مجھے فوراً مدد کی ضرورت ہے۔";
+  if(type>=0)m+="\nنوعیت: "+TYPES[type][2];
+  const md=loadMed();
+  if(md.blood)m+="\nبلڈ گروپ: "+md.blood;
+  if(md.notes)m+="\nطبی معلومات: "+md.notes;
+  m+=pos?"\nمیرا مقام: https://maps.google.com/?q="+pos.coords.latitude+","+pos.coords.longitude+" (تقریباً "+Math.round(pos.coords.accuracy)+" میٹر)":"\n(میرا مقام معلوم نہیں ہو سکا، مجھے فوراً فون کریں۔)";
+  return m;
+}
+function show(msg){
+  current=msg;$("msg").textContent=msg;
+  const box=$("people");box.textContent="";
+  const list=load().filter(c=>norm(c.phone).length>=11);
+  if(!list.length)box.append(mk("p","","پہلے نیچے اپنے رابطے محفوظ کریں۔ Save your contacts below first."));
+  list.forEach(c=>{
+    const num=norm(c.phone),txt=encodeURIComponent(msg);
+    const row=mk("div","person");row.append(mk("b","",c.name||c.phone));
+    const acts=mk("div","acts");
+    const wa=mk("a","btn wa","WhatsApp","https://wa.me/"+num+"?text="+txt);wa.target="_blank";wa.rel="noopener";
+    acts.append(wa,mk("a","btn","SMS","sms:+"+num+"?body="+txt));
+    row.append(acts);box.append(row);
+  });
+  $("alert").style.display="block";
+  $("alert").scrollIntoView({behavior:"smooth",block:"start"});
+  return list.length;
+}
+function getPos(){
+  return new Promise(res=>{
+    if(!navigator.geolocation)return res(null);
+    navigator.geolocation.getCurrentPosition(p=>res(p),()=>res(null),{enableHighAccuracy:true,timeout:10000,maximumAge:30000});
+  });
+}
+
+$("sos").onclick=async()=>{
+  const b=$("sos");b.classList.add("busy");
+  if(navigator.vibrate)navigator.vibrate([300,100,300]);
+  status("مقام تلاش کر رہا ہوں… Finding your location…");
+  const pos=await getPos();
+  b.classList.remove("busy");
+  const n=show(build(pos));
+  status(pos?"مقام مل گیا · Location found":"مقام نہیں ملا۔ پیغام پھر بھی تیار ہے · No location; message still ready",pos?"done":"warn");
+  say(n?"پیغام تیار ہے۔ اپنے رابطوں کو بھیجیں، اور ضرورت ہو تو ایک سو پندرہ یا گیارہ سو بائیس پر کال کریں۔":"پہلے اپنے رابطے محفوظ کریں۔ فوری مدد کے لیے ایک سو پندرہ یا گیارہ سو بائیس پر کال کریں۔");
+};
+
+$("safe").onclick=()=>{show("✅ الحمدللہ، اب میں محفوظ ہوں۔ فکر نہ کریں، شکریہ۔");status("خیریت کا پیغام تیار · Safe message ready","done")};
+$("share").onclick=async()=>{
+  if(!current)return status("پہلے مدد کا بٹن دبائیں · Press the help button first","warn");
+  try{
+    if(navigator.share){await navigator.share({text:current})}
+    else{await navigator.clipboard.writeText(current);status("پیغام نقل ہو گیا · Message copied","done")}
+  }catch(e){}
+};
+
+// Siren
+let ac=null,osc=null,tm=null;
+$("siren").onclick=()=>{
+  const b=$("siren");
+  if(osc){clearInterval(tm);try{osc.stop();ac.close()}catch(e){}osc=ac=null;b.classList.remove("on");b.textContent="🔊 سائرن · Siren";return}
+  try{
+    ac=new(window.AudioContext||window.webkitAudioContext)();osc=ac.createOscillator();
+    const g=ac.createGain();g.gain.value=.5;osc.type="square";osc.frequency.value=650;
+    osc.connect(g);g.connect(ac.destination);osc.start();
+    let hi=false;tm=setInterval(()=>{hi=!hi;osc.frequency.value=hi?1100:650},450);
+    b.classList.add("on");b.textContent="⏹ سائرن بند کریں · Stop siren";
+  }catch(e){status("سائرن نہیں چل سکا · Siren failed","warn")}
+};
+
+// Weather alert (Open-Meteo, free, no key)
+const DAYS=["آج","کل","پرسوں"];
+function lvl(rain,t){
+  let a=0,txt="ٹھیک · OK";
+  if(rain>=50){a=3;txt="سیلاب کا خطرہ · Flood risk"}else if(rain>=20){a=2;txt="تیز بارش · Heavy rain"}
+  if(t>=42&&a<3){a=3;txt="شدید گرمی · Extreme heat"}else if(t>=38&&a<2){a=2;txt="گرمی · Hot"}
+  return [a,txt];
+}
+let wxMsg="";
+$("wx").onclick=async()=>{
+  status("موسم دیکھ رہا ہوں… Checking weather…");
+  const pos=await getPos();
+  if(!pos)return status("مقام کی اجازت دیں · Please allow location","warn");
+  try{
+    const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude="+pos.coords.latitude+"&longitude="+pos.coords.longitude+"&daily=precipitation_sum,temperature_2m_max&forecast_days=3&timezone=auto");
+    const d=(await r.json()).daily;
+    const box=$("days");box.textContent="";
+    let worst=0,wl="";
+    d.time.forEach((_,i)=>{
+      const rain=Math.round(d.precipitation_sum[i]),t=Math.round(d.temperature_2m_max[i]);
+      const [a,txt]=lvl(rain,t);
+      if(a>worst){worst=a;wl=DAYS[i]+": "+txt.split("·")[0].trim()}
+      const row=mk("div","day");
+      row.append(mk("b","",DAYS[i]),mk("small","","🌧 "+rain+" mm   🌡 "+t+"°C"),mk("span","pill p"+a,txt));
+      const bar=mk("div","bar"),f=mk("i","f"+a);f.style.width=Math.min(100,Math.round(rain/60*100))+"%";bar.append(f);row.append(bar);
+      box.append(row);
+    });
+    $("wxnote").style.display="block";
+    wxMsg=worst>=2?"⚠️ موسم کی وارننگ — "+wl+"۔ احتیاط کریں اور محفوظ رہیں۔":"";
+    $("wxsend").style.display=worst>=2?"block":"none";
+    status(worst>=2?"احتیاط کریں · Take care":"آنے والے دن ٹھیک ہیں · Looks fine",worst>=2?"warn":"done");
+    say(worst>=2?"موسم کی وارننگ۔ "+wl.split(": ")[1]+"۔ احتیاط کریں۔":"اگلے تین دن موسم ٹھیک لگ رہا ہے۔");
+  }catch(e){status("انٹرنیٹ نہیں ہے · No internet","warn")}
+};
+$("wxsend").onclick=()=>{if(wxMsg)show(wxMsg)};
+
+// Go-bag checklist
+const KIT=["پانی (3 دن کا) · Water, 3 days","خشک خوراک · Dry food","ٹارچ اور بیٹری · Torch and batteries","پاور بینک · Power bank","فرسٹ ایڈ باکس · First-aid box","ضروری دوائیں · Essential medicines","CNIC اور کاغذات کی کاپی · ID and document copies","نقد رقم · Cash","ریڈیو · Radio","سیٹی · Whistle","اضافی کپڑے · Spare clothes","بچوں اور بزرگوں کا سامان · Items for kids and elders"];
+let kit;try{kit=JSON.parse(localStorage.getItem("eh_kit_v1"))||[]}catch(e){kit=[]}
+const paintKit=()=>{const n=kit.filter(Boolean).length;$("kitcount").textContent=n+"/"+KIT.length;$("kitbar").firstChild.style.width=Math.round(n/KIT.length*100)+"%"};
+KIT.forEach((t,i)=>{
+  const l=mk("label","kitem"),c=mk("input");c.type="checkbox";c.checked=!!kit[i];
+  c.onchange=()=>{kit[i]=c.checked;put("eh_kit_v1",kit);paintKit()};
+  l.append(c,document.createTextNode(t));$("kit").append(l);
+});
+paintKit();
+try{$("meet").value=localStorage.getItem("eh_meet_v1")||""}catch(e){}
+$("meet").oninput=()=>{try{localStorage.setItem("eh_meet_v1",$("meet").value)}catch(e){}};
+if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+</script>
+</body>
+</html>
